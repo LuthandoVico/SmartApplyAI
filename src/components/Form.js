@@ -4,11 +4,18 @@ import { analyzeCV } from "../services/api";
 function Form({ setResult }) {
   const [cvText, setCvText] = useState("");
   const [jobDescription, setJobDescription] = useState("");
+
   const handleSubmit = async () => {
     if (!cvText.trim() || !jobDescription.trim()) return;
     setResult(null);
     const data = { cvText, jobDescription };
     const result = await analyzeCV(data);
+
+    // save for InterviewPrep to read
+    const detectedRole = jobDescription.split("\n")[0].trim().slice(0, 60);
+    localStorage.setItem("smartapply_role", detectedRole);
+    localStorage.setItem("smartapply_missing", JSON.stringify(result.missingSkills || []));
+
     setResult(result);
   };
 
@@ -16,8 +23,6 @@ function Form({ setResult }) {
 
   return (
     <div className="space-y-10">
-
-      {/* Step inputs */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
         {/* Resume */}
@@ -71,7 +76,6 @@ function Form({ setResult }) {
           <span>Analyze Match</span>
         </button>
       </div>
-
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Card({ children, className = "" }) {
   return (
@@ -29,6 +30,8 @@ function CardHeader({ icon, iconBg, iconColor, title, titleColor, action }) {
 function Result({ result }) {
   const [copySuccess, setCopySuccess] = useState(false);
   const [showImprovedCV, setShowImprovedCV] = useState(false);
+
+  const navigate = useNavigate();
 
   if (!result) return null;
 
@@ -195,8 +198,39 @@ function Result({ result }) {
         </Card>
       )}
 
+      {/* ── Row 5: Practice Interview CTA ── */}
+      {score >= 50 && (
+        <div className="rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4"
+          style={{ background: "linear-gradient(135deg, #0f172a, #1e293b)", border: "1px solid #334155" }}>
+          <div className="space-y-1 text-center md:text-left">
+            <p style={{ fontFamily: "Manrope, sans-serif" }} className="font-bold text-white text-base">
+              Ready for the next step?
+            </p>
+            <p className="text-slate-400 text-sm">
+              Practice your interview with an AI coach — questions tailored to this exact role.
+            </p>
+          </div>
+          <button
+           onClick={() => {
+
+            localStorage.setItem("smartapply_missing", JSON.stringify(result.missingSkills || []));
+            navigate("/interview");
+          }}
+                      className="flex items-center space-x-2 px-6 py-3 rounded-xl font-bold text-sm transition-all active:scale-95 shrink-0"
+            style={{ background: "linear-gradient(135deg, #22d3ee, #06b6d4)", color: "#0f172a" }}
+          >
+            <span className="material-symbols-outlined text-base">psychology</span>
+            <span>Practice Interview</span>
+          </button>
+        </div>
+      )}
+
+
     </div>
   );
+
+
+  
 }
 
 export default Result;
